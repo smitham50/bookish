@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
+import { joinWords } from '../utils/stringManipulation';
 
 const Image = styled.img`
   margin: 1rem;
 `;
-
-function joinWords(keywords) {
-  return keywords.split(' ').join('+');
-}
 
 export default function Home(props) {
   const [searchTerms, setSearchTerms] = useState('');
@@ -23,10 +20,6 @@ export default function Home(props) {
     });
   }
 
-  useEffect(() => {
-    console.log('in effect', props, books);
-  });
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const keywords = joinWords(searchTerms);
@@ -40,18 +33,16 @@ export default function Home(props) {
       },
     };
 
-    let results, error;
+    let results;
 
     try {
       results = await axios.request(options);
     } catch(e) {
-      error = e;
+      console.error(e);
     }
     
     if (!error) {
       setBooks(results.data.items);
-    } else {
-      console.error(error);
     }
   }
 
